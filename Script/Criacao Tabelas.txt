@@ -1,0 +1,19 @@
+create table hospede(
+ codigo integer not null primary key,
+ nome varchar(200),
+ documento varchar(20),
+ telefone varchar(20)
+);
+
+create table checkin(
+	codigo integer not null primary key,
+	cod_hospede integer,
+	data_entrada date,
+	data_saida date,
+	adicional_veiculo BOOLEAN,
+	vlr_tolal FLOAT,
+	
+	constraint checkin_hospede_FK foreign key (cod_hospede)
+	references hospede(codigo)
+	
+);
