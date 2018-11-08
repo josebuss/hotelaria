@@ -32,7 +32,6 @@ public class checkinResource {
 	@PostMapping()
 	public checkin cadastroCheckIn(@RequestBody @Valid checkin ckin) {
 		float vlr = 0;
-		Date dia = new Date();
 		Calendar cal = Calendar.getInstance();
 		/*
 		 * Uma diária no hotel de segunda à sexta custa R$120,00; Uma diária no hotel em
@@ -41,28 +40,29 @@ public class checkinResource {
 		 * nos finais de semana; 
 		 * Caso o horário da saída seja após às 16:30h deve ser cobrada uma diária extra;
 		 */
-		dia = Date.from(ckin.getData_entrada());
+		Date dia = Date.from(ckin.getData_entrada());
 		do {
 			cal.setTime(dia);
-			vlr = CalculaValorDiaria(cal.DAY_OF_WEEK, ckin.isAdicional_veiculo());
+			vlr += CalculaValorDiaria(cal.get(cal.DAY_OF_WEEK), ckin.isAdicional_veiculo());
 			cal.add(Calendar.DATE, 1);
 			dia = cal.getTime();
 		} while (!dia.after(Date.from(ckin.getData_saida())));
 		
 		cal.setTime(Date.from(ckin.getData_saida()));
-		if ((cal.HOUR_OF_DAY > 16) || ((cal.HOUR_OF_DAY == 16) && (cal.MINUTE > 30))) {
+		if ((cal.get(cal.HOUR_OF_DAY) > 16) || ((cal.get(cal.HOUR_OF_DAY) == 16) && (cal.get(cal.MINUTE) > 30))) {
 			vlr += CalculaValorDiaria(cal.DAY_OF_WEEK, false);
 		}
 
 		ckin.setVlr_total(vlr);
-		return cr.save(ckin);
+		//return cr.save(ckin);
+		return ckin;
 	}
 
 	private float CalculaValorDiaria(int DiaSemana, Boolean utilizaGaragem) {
 		float vlr = 0;
 		switch (DiaSemana) {
-		case 0:
-		case 6:
+		case 1:
+		case 7:
 			vlr += 150;
 			if (utilizaGaragem) {
 				vlr += 20;

@@ -2,28 +2,38 @@ package com.hotelaria.models;
 
 import java.time.Instant;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 public class checkin {
 	@Id
-	@SequenceGenerator(name = "seq_id_checkin", sequenceName = "seq_checkin")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_id_checkin")
+	@SequenceGenerator(name = "seq_id_checkin", sequenceName = "seq_checkin", allocationSize=1)
 	private int codigo;
 	
+	@NotNull
 	private int cod_hospede;
 	
+	@NotNull
 	private Instant data_entrada;
 	
+	@NotNull
 	private Instant data_saida;
 	
+	@NotNull
 	private boolean adicional_veiculo;
 	
 	private float vlr_total;
+	
 	
 
 	public float getVlr_total() {

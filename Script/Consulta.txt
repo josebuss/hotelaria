@@ -1,0 +1,21 @@
+select a.cod_hospede, b.nome nome_hospede,
+       (select sum(vlr_total) from checkin where cod_hospede = a.cod_hospede) vlr_total_gasto,
+	   (select vlr_total 
+		  from checkin 
+		 where cod_hospede = a.cod_hospede
+	       and data_entrada = (select max(data_entrada)
+							     from checkin
+							    where cod_hospede = a.cod_hospede)) vlr_ultima_diaria
+  from checkin a,
+       hospede b
+ where a.cod_hospede = b.codigo 
+   /* --não está hospedado
+   and a.data_saida < '2018-11-05' 
+   and not exists (select 1 from checkin 
+				   	where cod_hospede = a.cod_hospede 
+				      and '2018-11-05' between data_entrada and data_saida)
+  */
+  --/* --está hospedado
+  and '2018-11-04' between a.data_entrada and a.data_saida
+  --*/
+ group by a.cod_hospede, b.nome
